@@ -103,6 +103,14 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        if (username) {
+            setCookie("username", username, 7); // Store username for 7 days
+        }
+        calculateScore();
+        saveScore(username, score);
+        fetchQuestions();
     }
     function checkUsername() {
         const username = getCookie("username");
