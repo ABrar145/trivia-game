@@ -102,16 +102,21 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
-        //... form submission logic including setting cookies and calculating score
-        event.preventDefault();
-        const username = document.getElementById("username").value;
-        if (username) {
-            setCookie("username", username, 7); // Store username for 7 days
+        const usernameInput = document.getElementById("username");
+        const username = usernameInput.value || getCookie("username");
+        
+        if (!username) {
+            alert("Please enter your name.");
+            return;
         }
-        calculateScore();
+        
+        setCookie("username", username, 7); // Save username for 7 days
+        const score = calculateScore();
         saveScore(username, score);
-        fetchQuestions();
+        displayScores();
+        fetchQuestions(); // Restart the game with new questions
     }
+    
     function checkUsername() {
         const username = getCookie("username");
         if (username) {
@@ -138,24 +143,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function saveScore(username, score) {
         //... code for saving the score to localStorage
+        const scores = JSON.parse(localStorage.getItem("scores")) || [];
+        scores.push({ player: username, score });
+        localStorage.setItem("scores", JSON.stringify(scores));
     }
     function newPlayer() {
         //... code for clearing the username cookie and updating the UI
     }
     function calculateScore() {
-        //... code for calculating the score
+        const questionInputs = document.querySelectorAll("input[type='radio']:checked");
         let score = 0;
-        const questions = document.querySelectorAll("#question-container div");
-        questions.forEach((question, index) => {
-            const correctAnswer = question.querySelector('input[data-correct="true"]');
-            const selectedAnswer = question.querySelector('input[name="answer' + index + '"]:checked');
-            if (selectedAnswer && selectedAnswer.value === correctAnswer.value) {
+        questionInputs.forEach((input) => {
+            if (input.dataset.correct === "true") {
                 score++;
             }
         });
         return score;
     }
+    
     function displayScores() {
         //... code for displaying scores from localStorage
+        const scores = JSON.parse(localStorage.getItem("scores")) || [];
+        const scoreTableBody = document.getElementById("score-table").querySelector("tbody");
+        scoreTableBody.innerHTML = ""; // Clear previous scores
+        scores.forEach(({ player, score }) => {
+            const row = scoreTableBody.insertRow();
+            row.innerHTML = `<td>${player}</td><td>${score}</td>`;
+        });
     }
 });
