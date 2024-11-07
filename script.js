@@ -108,11 +108,21 @@ document.addEventListener("DOMContentLoaded", function () {
         //... code for checking if a username cookie is set and adjusting the UI
     }
     function setCookie(name, value, days) {
-        //... code for setting a cookie
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = `${name}=${value};${expires};path=/`;
     }
     function getCookie(name) {
-        //... code for retrieving a cookie
+    const nameEq = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEq) === 0) return c.substring(nameEq.length, c.length);
     }
+    return "";
+    }
+
     function saveScore(username, score) {
         //... code for saving the score to localStorage
     }
