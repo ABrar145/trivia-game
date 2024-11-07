@@ -105,8 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
         //... form submission logic including setting cookies and calculating score
     }
     function checkUsername() {
-        //... code for checking if a username cookie is set and adjusting the UI
+        const username = getCookie("username");
+        if (username) {
+            document.getElementById("username").style.display = "none";
+            document.getElementById("new-player").style.display = "block";
+        }
     }
+    
     function setCookie(name, value, days) {
         const d = new Date();
         d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
