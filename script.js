@@ -144,6 +144,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     function calculateScore() {
         //... code for calculating the score
+        let score = 0;
+        const questions = document.querySelectorAll("#question-container div");
+        questions.forEach((question, index) => {
+            const correctAnswer = question.querySelector('input[data-correct="true"]');
+            const selectedAnswer = question.querySelector('input[name="answer' + index + '"]:checked');
+            if (selectedAnswer && selectedAnswer.value === correctAnswer.value) {
+                score++;
+            }
+        });
+        return score;
     }
     function displayScores() {
         //... code for displaying scores from localStorage
