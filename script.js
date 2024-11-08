@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         
-        setCookie("username", username, 7); // Save username for 7 days
+        setCookie("username", username, 7); // Save username for 7 days.
         // const score = calculateScore();
         const currentScore = calculateScore();
         saveScore(username, currentScore);
