@@ -1,6 +1,4 @@
-/**
- * Initializes the Trivia Game when the DOM is fully loaded.
- */
+
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("trivia-form");
     const questionContainer = document.getElementById("question-container");
@@ -102,27 +100,75 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
-        //... form submission logic including setting cookies and calculating score
+        const usernameInput = document.getElementById("username");
+        const username = usernameInput.value || getCookie("username");
+        
+        if (!username) {
+            alert("Please enter your name.");
+            return;
+        }
+        
+        setCookie("username", username, 7); // Save username for 7 days.
+        // const score = calculateScore();
+        const currentScore = calculateScore();
+        saveScore(username, currentScore);
+        displayScores();
+        checkUsername();
+        fetchQuestions(); // Restart the game with new questions
     }
-    function checkUsername() {
-        //... code for checking if a username cookie is set and adjusting the UI
+    
+    function newPlayer() {
+        const username = getCookie("username");
+        if (username) {
+            document.getElementById("username").style.display = "none";
+            document.getElementById("new-player").style.display = "block";
+        }
     }
+    
     function setCookie(name, value, days) {
-        //... code for setting a cookie
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = `${name}=${value};${expires};path=/`;
     }
     function getCookie(name) {
-        //... code for retrieving a cookie
+        const nameEq = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(nameEq) === 0) return c.substring(nameEq.length, c.length);
+        }
+        return "";
     }
+
     function saveScore(username, score) {
         //... code for saving the score to localStorage
+        const scores = JSON.parse(localStorage.getItem("scores")) || [];
+        scores.push({ player: username, score });
+        localStorage.setItem("scores", JSON.stringify(scores));
     }
     function newPlayer() {
         //... code for clearing the username cookie and updating the UI
     }
     function calculateScore() {
-        //... code for calculating the score
+        const questionInputs = document.querySelectorAll("input[type='radio']:checked");
+        let score = 0;
+        questionInputs.forEach((input) => {
+            if (input.dataset.correct === "true") {
+                score++;
+            }
+        });
+        return score;
     }
+    
     function displayScores() {
         //... code for displaying scores from localStorage
+        const scores = JSON.parse(localStorage.getItem("scores")) || [];
+        const scoreTableBody = document.getElementById("score-table").querySelector("tbody");
+        scoreTableBody.innerHTML = ""; // Clear previous scores
+        scores.forEach(({ player, score }) => {
+            const row = scoreTableBody.insertRow();
+            row.innerHTML = `<td>${player}</td><td>${score}</td>`;
+        });
     }
 });
