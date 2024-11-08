@@ -111,13 +111,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         setCookie("username", username, 7); // Save username for 7 days
-        const score = calculateScore();
-        saveScore(username, score);
+        // const score = calculateScore();
+        const currentScore = calculateScore();
+        saveScore(username, currentScore);
         displayScores();
+        checkUsername();
         fetchQuestions(); // Restart the game with new questions
     }
     
-    function checkUsername() {
+    function newPlayer() {
         const username = getCookie("username");
         if (username) {
             document.getElementById("username").style.display = "none";
@@ -132,13 +134,13 @@ document.addEventListener("DOMContentLoaded", function () {
         document.cookie = `${name}=${value};${expires};path=/`;
     }
     function getCookie(name) {
-    const nameEq = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(nameEq) === 0) return c.substring(nameEq.length, c.length);
-    }
-    return "";
+        const nameEq = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(nameEq) === 0) return c.substring(nameEq.length, c.length);
+        }
+        return "";
     }
 
     function saveScore(username, score) {
