@@ -1,6 +1,4 @@
-/**
- * Initializes the Trivia Game when the DOM is fully loaded.
- */
+
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("trivia-form");
     const questionContainer = document.getElementById("question-container");
